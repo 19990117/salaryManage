@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    password: root
+    username: root
+    url: jdbc:mysql://47.106.153.21:3306/salary?useUnicode=true&characterEncoding=UTF-8
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: config,wall,stat
+
+    # 下面为连接池的补充设置，应用到上面所有数据源中
+    # 初始化大小，最小，最大
+    initial-size: 5
+    min-idle: 5
+    max-active: 20
+    # 配置获取连接等待超时的时间
+    max-wait: 60000
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    time-between-eviction-runs-millis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    min-evictable-idle-time-millis: 300000
+    validation-query: SELECT * FROM tbapplication
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    #   配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    use-global-data-source-stat: true
+    # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAOUPJNf5Av10B9qM8dv3D54P186I1uBLNAl8woZr09HwD1ieHx/kyBkhdW0EVJ9muoL/ixvFp1L3yZJpEM62760CAwEAAQ==
+
+    # 配置监控服务器
+    stat-view-servlet:
+      login-username: admin
+      login-password: 123456
+      reset-enable: false
+      url-pattern: /druid/*
+      # 添加IP白名单
+      #allow:
+      # 添加IP黑名单，当白名单和黑名单重复时，黑名单优先级更高
+      #deny:
+    web-stat-filter:
+      # 添加过滤规则
+      url-pattern: /*
+      # 忽略过滤格式
+      exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico"
+  redis:
+    host: 47.106.153.21
+mybatis:
+  type-aliases-package: com.ten.mapper
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapper/*.xml
