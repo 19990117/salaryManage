@@ -12,4 +12,7 @@ public interface UserService {
     public User findUserByUsername(String username);
 
     List<Menu> getUserMenu(User user);
+
+    public int getLevelByUser(User user);
+
 }

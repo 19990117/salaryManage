@@ -13,10 +13,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "ten")
@@ -30,7 +27,7 @@ public class LoginController {
 
 
     @RequestMapping(value = "/login")
-    public Map<String, Object> login(@RequestParam(required = true) String username, @RequestParam(required = true) String password ) {
+    public List<Menu> login(@RequestParam(required = true) String username, @RequestParam(required = true) String password ) {
 
         // 获取subject
         Subject subject = SecurityUtils.getSubject();
@@ -38,9 +35,9 @@ public class LoginController {
         // 封装用户数据
         UsernamePasswordToken token = new UsernamePasswordToken(username,password);
 
-        Map<String ,Object > resMap = new LinkedHashMap<>();
-        resMap.put("res_code","000");
-        resMap.put("res_msg","success");
+        //Map<String ,Object > resMap = new LinkedHashMap<>();
+        //resMap.put("res_code","000");
+        //resMap.put("res_msg","success");
         try {
             // 执行登录方法
             subject.login(token);
@@ -64,7 +61,7 @@ public class LoginController {
 //            }
 //            subject.getSession().setAttribute("loginedUser",username);
             // 设置session过期时间
-            subject.getSession().setTimeout(50000);
+            //subject.getSession().setTimeout(50000);
             // 获取用户对象
             User user = (User)subject.getPrincipal();
 
@@ -101,27 +98,57 @@ public class LoginController {
                 }
             }
 
-            resMap.put("res_body",mergedMenus);
-
-            return resMap;
+            return mergedMenus;
 
         } catch (UnknownAccountException e) {
-            resMap.put("res_code","001");
-            resMap.put("res_msg","Error");
-            resMap.put("res_body","用户不存在");
-            return resMap;
+            List<Menu> mergedMenus = new ArrayList<>();
+            Menu menu = new Menu();
+            menu.setMsg("用户不存在");
+            mergedMenus.add(menu);
+            return mergedMenus;
         } catch (IncorrectCredentialsException e) {
-            resMap.put("res_code","002");
-            resMap.put("res_msg","Error");
-            resMap.put("res_body","密码错误");
-            return resMap;
+            List<Menu> mergedMenus = new ArrayList<>();
+            Menu menu = new Menu();
+            menu.setMsg("密码错误");
+            mergedMenus.add(menu);
+            return mergedMenus;
+            //resMap.put("res_code","002");
+            //resMap.put("res_msg","Error");
+            //resMap.put("res_body","");
+            //return resMap;
         }
+
     }
 
-    @PostMapping(value = "/testlogin")
-    public JSONPObject testController(@RequestBody JSONPObject user) {
-        System.out.println(user);
-        return  user;
+    @RequestMapping(value = "/loginOut")
+    public void loginOut(){
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+    }
+
+    @RequestMapping("/testLogin")
+    public String testSelect() {
+        return "testLogin";
+    }
+
+    /**
+     * 未登录就请求其他url
+     */
+    @RequestMapping("/needLogin")
+    public Map needLogin() {
+        HashMap<String,Object> info = new HashMap<>();
+        info.put("info","you need login");
+        return info;
+    }
+
+    /**
+     * 未授权
+     */
+    @RequestMapping("/noAuth")
+    public Map<String, Object> noAuth() {
+        HashMap<String,Object> info = new HashMap<>();
+        info.put("info","you have no auth");
+        return info;
     }
 
 }

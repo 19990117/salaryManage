@@ -2,7 +2,7 @@ package com.ten.entity;
 
 public class User {
 
-  private long id;
+  private int id;
   private String username;
   private String empNum;
   private String password;
@@ -16,15 +16,15 @@ public class User {
   private String email;
   private String bankName;
   private String telNum;
-  private java.sql.Date time;
+  private String time;
   private String staffing;
 
 
-  public long getId() {
+  public int getId() {
     return id;
   }
 
-  public void setId(long id) {
+  public void setId(int id) {
     this.id = id;
   }
 
@@ -144,11 +144,11 @@ public class User {
   }
 
 
-  public java.sql.Date getTime() {
+  public String getTime() {
     return time;
   }
 
-  public void setTime(java.sql.Date time) {
+  public void setTime(String time) {
     this.time = time;
   }
 

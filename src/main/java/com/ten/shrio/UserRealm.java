@@ -28,6 +28,9 @@ public class UserRealm extends AuthorizingRealm {
 
 
         //权限信息对象info，用来存放查出的用户的所有的角色（role）以及权限（permission）
+
+        User user = (User)principalCollection.getPrimaryPrincipal();
+        int level = userService.getLevelByUser(user);
         AuthorizationInfo authorizationInfo = new AuthorizationInfo() {
             @Override
             public Collection<String> getRoles() {
@@ -38,6 +41,19 @@ public class UserRealm extends AuthorizingRealm {
             public Collection<String> getStringPermissions() {
                 List<String> perms = new LinkedList<>();
                 perms.add("user");
+                if (level == 2){
+                    perms.add("personnel");
+                } else if (level == 3){
+                    perms.add("financial");
+                } else if (level == 4){
+                    perms.add("department");
+                } else {
+                    perms.add("system");
+                    perms.add("personnel");
+                    perms.add("financial");
+                    perms.add("department");
+                }
+                perms.add("Login");
                 return perms;
             }
 

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="OFF">
+
+    <!--日志输出地方-->
+    <appenders>
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="console：[%d{HH:mm:ss.SSS}] %-5level %class{36} %L %M - %msg%n"/>
+
+            <!--%d打印时间。-->
+            <!--%-5level,%level表示打印日志等级，-5表示左对齐，一共五位，不足五位空格补齐，多于五位保留-->
+            <!--%class{36}，输出类-->
+            <!--%L，输出错误行号-->
+            <!--%M或 %method，输出方法名-->
+            <!--%msg或者%m,输出错误信息-->
+
+            <!--%n,老朋友了-->
+        </Console>
+        <JDBC name="jdbc" tableName="sys_LoginLog">
+            <ConnectionFactory class="com.ten.aspect.ConnectionFactory" method="getDatabaseConnection"/>
+            <!-- 数据表 log4j2 中的字段 -->
+            <Column name="time" pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}" />
+            <Column name="message" pattern="%message"/>
+        </JDBC>
+
+        <JDBC name="err" tableName="sys_ErrorLog">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            <ConnectionFactory class="com.ten.aspect.ConnectionFactory" method="getDatabaseConnection"/>
+            <Column name="level" pattern="%level"/>
+            <Column name="logger" pattern="%class"/>
+            <Column name="time" pattern="%d{yyyy-MM-dd HH:mm:ss.SSS}" />
+            <Column name="message" pattern="%message"/>
+        </JDBC>
+
+    </appenders>
+
+    <loggers>
+        <!--根，全局配置-->
+        <root level="info">
+            <appender-ref ref="err"/>
+            <appender-ref ref="Console"/>
+
+        </root>
+
+        <!--记录druid-sql的记录-->
+        <!--<logger name="druid.sql.Statement" level="debug" additivity="false">-->
+            <!--&lt;!&ndash;name="druid.sql.Statement"，代表这样一个包下面的包及其子包里面的东西&ndash;&gt;-->
+            <!--<appender-ref ref="jdbc"/>-->
+        <!--</logger>-->
+
+        <!--某个测试类的logger-->
+        <logger name="com.ten.aspect.LoginLogAspect" additivity="false">
+            <appender-ref ref="jdbc"/>
+        </logger>
+
+    </loggers>
+</configuration>

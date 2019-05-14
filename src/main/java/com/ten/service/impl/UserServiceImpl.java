@@ -44,4 +44,14 @@ public class UserServiceImpl implements UserService {
         List<Menu> roleMenus =  menuService.getMenusByRole(userRoles);
         return roleMenus;
     }
+
+    @Override
+    public int getLevelByUser(User user) {
+        List<Role> userRoles = roleService.getRolesByUser(user);
+        int level=1;
+        for (Role role:userRoles){
+            level = role.getLevel();
+        }
+        return level;
+    }
 }

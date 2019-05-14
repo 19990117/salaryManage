@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /*
 * Shiro配置类
 * */
@@ -67,6 +70,31 @@ public class ShiroConfig {
         *
         * */
 
+        Map<String, String> filterMap = new LinkedHashMap<>();
+
+        //放行
+        filterMap.put("/user/allusers", "anon");
+        filterMap.put("/ten/login", "anon");
+        filterMap.put("/ten/loginOut", "anon");
+
+        //授权过滤器
+        //注意：当前授权拦截后，shiro会自动跳转到未授权页面
+        filterMap.put("/user/*","perms[user]");
+        filterMap.put("/personnel/*","perms[personnel]");
+        filterMap.put("/financial/*","perms[financial]");
+        filterMap.put("/department/*","perms[department]");
+        filterMap.put("/system/*","perms[system]");
+        filterMap.put("/ten/testLogin", "perms[Login]");
+
+        //必须认证（登录）
+        filterMap.put("/*", "authc");
+
+        //未登录状态访问其他url
+        shiroFilterFactoryBean.setLoginUrl("/ten/needLogin");
+        //设置未授权提示页面
+        shiroFilterFactoryBean.setUnauthorizedUrl("/ten/noAuth");
+
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
 
 
         return shiroFilterFactoryBean;

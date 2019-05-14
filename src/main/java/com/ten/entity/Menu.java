@@ -8,8 +8,9 @@ public class Menu {
     private String describe;
     private String url;
     private String parent;
-
     private List<Menu> childMenus;
+    private String msg;
+    private String icon;
 
     public List<Menu> getChildMenus() {
         return childMenus;
@@ -57,5 +58,21 @@ public class Menu {
 
     public void setDescribe(String describe) {
         this.describe = describe;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }
